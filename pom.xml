@@ -28,18 +28,12 @@
 
 		<!-- Spring Security -->
 		<!-- spring-security-web and spring-security-config -->
-		
+
 		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-web</artifactId>
-		    <version>${springsecurity.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>2.2.2.RELEASE</version>
 		</dependency>
-		
-		<dependency>
-		    <groupId>org.springframework.security</groupId>
-		    <artifactId>spring-security-config</artifactId>
-		    <version>${springsecurity.version}</version>
-		</dependency>	
 		
 		<!-- Add Spring Security Taglibs support -->
 		<dependency>
