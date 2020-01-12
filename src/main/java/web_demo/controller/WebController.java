@@ -1,7 +1,7 @@
 package web_demo.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class WebController {
@@ -16,6 +16,12 @@ public class WebController {
 	public String showAdmin() {
 		return "admin";
 	}
+
+//	@PostMapping("/testing")
+//	@ResponseBody
+//	public String test(@RequestBody String test) {
+//		return test;
+//	}
 }
 
 
