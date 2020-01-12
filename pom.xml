@@ -19,11 +19,11 @@
 
 	<dependencies>
 
-		<!-- Spring MVC support -->
+		<!-- Spring Boot Web -->
 		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${springframework.version}</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>2.2.2.RELEASE</version>
 		</dependency>
 
 		<!-- Spring Security -->
@@ -68,6 +68,8 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- JDBC & DB Pool-->
 
 		<dependency>
 			<groupId>mysql</groupId>
