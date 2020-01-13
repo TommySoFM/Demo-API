@@ -6,6 +6,7 @@ import web_demo.entity.Authorities;
 import web_demo.entity.Users;
 import web_demo.repository.AuthoritiesRepository;
 import web_demo.repository.UsersRepository;
+import web_demo.service.UsersService;
 
 @RestController
 @RequestMapping("/demo")
@@ -16,25 +17,29 @@ public class MainController {
     @Autowired
     private AuthoritiesRepository authoritiesRepository;
 
+    private final UsersService usersService;
+
+    public MainController(UsersService usersService) {
+        this.usersService = usersService;
+    }
+
     @PostMapping("/add")
     public @ResponseBody String addNewUser (@RequestParam String username, @RequestParam String password){
-        String passwordFormat = "(?=.*?[0-9])(?=.*?[a-zA-Z]).{6,12}";
-        if( password.matches(passwordFormat)){
-            Users users = new Users();
-            users.setUsername(username);
-            users.setPassword(password);
-            users.setEnabled(1);
-            userRepository.save(users);
+//        if (! usersService.isUsernameValid(username)){
+//            return "Username is invalid!";
+//        }
+//
+//        if (! usersService.isPasswordValid(password)){
+//            return "Password is invalid!";
+//        }
 
-            Authorities auth = new Authorities();
-            auth.setUsername(username);
-            auth.setAuthority("ROLE_USER");
-            authoritiesRepository.save(auth);
-            return "Saved";
-        } else {
-            return "Saving Failed -- Incorrect Password Format";
+         Users users = usersService.initUser(username, password);
+         userRepository.save(users);
+
+         Authorities auth = usersService.initAuthority(username);
+         authoritiesRepository.save(auth);
+         return "Saved";
         }
-    }
 
     @GetMapping("/all")
     public @ResponseBody Iterable<Users> getAllUsers() {
