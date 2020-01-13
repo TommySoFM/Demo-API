@@ -13,12 +13,18 @@ public class MainController {
     private UserRepository userRepository;
 
     @PostMapping("/add")
-    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String email){
-        User n = new User();
-        n.setName(name);
-        n.setEmail(email);
-        userRepository.save(n);
-        return "Saved";
+    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String password, @RequestParam String email){
+        String passwordFormat = "(?=.*?[0-9])(?=.*?[a-zA-Z]).{6,12}";
+        if( password.matches(passwordFormat)){
+            User user = new User();
+            user.setName(name);
+            user.setPassword(password);
+            user.setEmail(email);
+            userRepository.save(user);
+            return "Saved";
+        } else {
+            return "Saving Failed -- Incorrect Password Format";
+        }
     }
 
     @GetMapping("/all")
