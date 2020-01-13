@@ -35,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.csrf().disable()
 				.authorizeRequests()
+				.antMatchers("/demo/add").permitAll()
                 .anyRequest().authenticated()
 //				.and()
 //				.httpBasic();
@@ -47,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 			.and()
 			.logout()
+				.invalidateHttpSession(true)
+				.deleteCookies("JSESSIONID")
 				.permitAll();
 //			.and()
 //			.exceptionHandling().accessDeniedPage("/access-denied");
