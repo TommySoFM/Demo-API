@@ -1,26 +1,25 @@
 package web_demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import web_demo.entity.User;
-import web_demo.repository.UserRepository;
+import web_demo.entity.Users;
+import web_demo.repository.UsersRepository;
 
 @RestController
 @RequestMapping("/demo")
 public class MainController {
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository userRepository;
 
     @PostMapping("/add")
-    public @ResponseBody String addNewUser (@RequestParam String name, @RequestParam String password, @RequestParam String email){
+    public @ResponseBody String addNewUser (@RequestParam String username, @RequestParam String password){
         String passwordFormat = "(?=.*?[0-9])(?=.*?[a-zA-Z]).{6,12}";
         if( password.matches(passwordFormat)){
-            User user = new User();
-            user.setName(name);
-            user.setPassword(password);
-            user.setEmail(email);
-            userRepository.save(user);
+            Users users = new Users();
+            users.setUsername(username);
+            users.setPassword(password);
+            users.setEnabled(1);
+            userRepository.save(users);
             return "Saved";
         } else {
             return "Saving Failed -- Incorrect Password Format";
@@ -28,7 +27,7 @@ public class MainController {
     }
 
     @GetMapping("/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
+    public @ResponseBody Iterable<Users> getAllUsers() {
         return userRepository.findAll();
     }
 }
