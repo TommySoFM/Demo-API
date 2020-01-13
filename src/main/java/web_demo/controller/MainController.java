@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import web_demo.entity.User;
 import web_demo.repository.UserRepository;
 
-@Controller
+@RestController
 @RequestMapping("/demo")
 public class MainController {
     @Autowired
