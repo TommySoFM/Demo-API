@@ -2,7 +2,9 @@ package web_demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import web_demo.entity.Authorities;
 import web_demo.entity.Users;
+import web_demo.repository.AuthoritiesRepository;
 import web_demo.repository.UsersRepository;
 
 @RestController
@@ -10,6 +12,9 @@ import web_demo.repository.UsersRepository;
 public class MainController {
     @Autowired
     private UsersRepository userRepository;
+
+    @Autowired
+    private AuthoritiesRepository authoritiesRepository;
 
     @PostMapping("/add")
     public @ResponseBody String addNewUser (@RequestParam String username, @RequestParam String password){
@@ -20,6 +25,11 @@ public class MainController {
             users.setPassword(password);
             users.setEnabled(1);
             userRepository.save(users);
+
+            Authorities auth = new Authorities();
+            auth.setUsername(username);
+            auth.setAuthority("ROLE_USER");
+            authoritiesRepository.save(auth);
             return "Saved";
         } else {
             return "Saving Failed -- Incorrect Password Format";
