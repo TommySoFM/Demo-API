@@ -24,7 +24,7 @@ public class MainController {
     }
 
     @PostMapping("/add")
-    public @ResponseBody String addNewUser (@RequestParam String username, @RequestParam String password){
+    public @ResponseBody String addNewUser (String username, String password){
 //        if (! usersService.isUsernameValid(username)){
 //            return "Username is invalid!";
 //        }
