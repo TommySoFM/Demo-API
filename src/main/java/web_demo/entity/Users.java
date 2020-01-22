@@ -1,5 +1,7 @@
 package web_demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,11 +11,10 @@ import javax.persistence.Id;
 public class Users {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @JsonIgnore private Long id;
     @Id private String username;
     private String password;
-    private Integer enabled;
-
+    @JsonIgnore private Integer enabled;
 
     //Getter
     public Long getId() {return id;}

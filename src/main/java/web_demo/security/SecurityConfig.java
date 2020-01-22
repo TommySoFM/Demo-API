@@ -9,30 +9,26 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
+
 	@Autowired
 	private DataSource securityDataSource;
-//
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
 		auth.jdbcAuthentication().dataSource(securityDataSource);
 	}
-//		// add our users for in memory authentication
-//
-//		auth.inMemoryAuthentication()
-//			.withUser("admin").password(passwordEncoder().encode("adminPass")).roles("ADMIN", "EMPLOYEE")
-//			.and()
-//			.withUser("employee").password(passwordEncoder().encode("empPass")).roles("EMPLOYEE");
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource(){
@@ -58,14 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/demo/add").permitAll()
                 .anyRequest().authenticated()
-//				.and()
-//				.httpBasic();
-//			.antMatchers("/").hasRole("EMPLOYEE")
-//			.antMatchers("/admin/**").hasRole("ADMIN")
 			.and()
 			.formLogin()
-//				.loginPage("/login")
 				.loginProcessingUrl("/authenticateUser")
+				.successForwardUrl("/loginSuccess")
+				.failureForwardUrl("/loginFailed")
 				.permitAll()
 			.and()
 			.logout()
@@ -76,13 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //			.exceptionHandling().accessDeniedPage("/access-denied");
 
 	}
-//
-//	@Bean
-//	public PasswordEncoder passwordEncoder (){
-//		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//		return  passwordEncoder;
-//	}
-
 }
 
 

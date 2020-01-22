@@ -1,5 +1,7 @@
 package web_demo.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import web_demo.entity.Authorities;
@@ -11,6 +13,9 @@ import web_demo.service.UsersService;
 @RestController
 @RequestMapping("/demo")
 public class MainController {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private UsersRepository userRepository;
 
@@ -43,6 +48,7 @@ public class MainController {
 
     @GetMapping("/all")
     public @ResponseBody Iterable<Users> getAllUsers() {
+        logger.debug(String.valueOf(userRepository.findAll()));
         return userRepository.findAll();
     }
 }
