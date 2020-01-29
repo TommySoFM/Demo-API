@@ -33,11 +33,11 @@ public class MainController {
     @PostMapping("/add")
     public ResponseEntity<?> addNewUser (String username, String password){
         if (! userService.isUsernameValid(username)){
-            throw new CustomExceptionController("Invalid username");
+            throw new CustomException("Invalid username");
         }else if (! userService.isPasswordValid(password)){
-            throw new CustomExceptionController("Invalid Password");
+            throw new CustomException("Invalid Password");
         }else if( userService.isUsernameUsed(username)){
-            throw new CustomExceptionController("Username is used");
+            throw new CustomException("Username is used");
         }
 
         User user = userService.initUser(username, password);

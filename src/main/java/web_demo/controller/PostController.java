@@ -12,6 +12,9 @@ import web_demo.entity.Post;
 import web_demo.repository.PostRepository;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -25,11 +28,12 @@ public class PostController {
     @GetMapping("/post")
     public Iterable<Post> getAllPost () {
         return postRepository.findAll();
+    }
 //    public ResponseEntity<List<Post>> getAllPost () {
 //        Iterable<Post> posts = postRepository.findAll();
 //        List<Post> listPosts = (List<Post>) posts;
 //        return new ResponseEntity<List<Post>>(listPosts, HttpStatus.OK);
-    }
+
 
     @GetMapping(value = "/post/{username}")
     public Iterable<Post> getPersonPost(@PathVariable String username) {
@@ -38,7 +42,7 @@ public class PostController {
 
     @PostMapping(value = "/post")
     public ResponseEntity<?> addNewPost (String username, String postText) {
-        Post post = new Post(username, postText);
+        Post post = new Post(username, postText, LocalDateTime.now());
         postRepository.save(post);
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -50,7 +54,7 @@ public class PostController {
     @PutMapping(value = "/post/{id}")
     public ResponseEntity<?> updatePost (@PathVariable Long id, String username, String postText){
         if (!postRepository.existsById(id)){
-            throw new CustomExceptionController("Post not exist!");
+            throw new CustomException("Post not exist!");
         }
 
         postRepository.findById(id).map(
@@ -65,7 +69,7 @@ public class PostController {
     @DeleteMapping(value = "/post/{id}")
     public ResponseEntity<?> deletePost (@PathVariable Long id){
         if (!postRepository.existsById(id)){
-            throw new CustomExceptionController("Post not exist!");
+            throw new CustomException("Post not exist!");
         }
 
         postRepository.deleteById(id);
