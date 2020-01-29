@@ -3,12 +3,14 @@ package web_demo.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import web_demo.entity.Authorities;
-import web_demo.entity.Users;
-import web_demo.repository.AuthoritiesRepository;
-import web_demo.repository.UsersRepository;
-import web_demo.service.UsersService;
+import web_demo.entity.Authority;
+import web_demo.entity.User;
+import web_demo.repository.AuthorityRepository;
+import web_demo.repository.UserRepository;
+import web_demo.service.UserService;
 
 @RestController
 @RequestMapping("/demo")
@@ -17,37 +19,37 @@ public class MainController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private UsersRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private AuthoritiesRepository authoritiesRepository;
+    private AuthorityRepository authorityRepository;
 
-    private final UsersService usersService;
+    private final UserService userService;
 
-    public MainController(UsersService usersService) {
-        this.usersService = usersService;
+    public MainController(UserService usersService) {
+        this.userService = usersService;
     }
 
     @PostMapping("/add")
-    public @ResponseBody String addNewUser (String username, String password){
-//        if (! usersService.isUsernameValid(username)){
-//            return "Username is invalid!";
-//        }
-//
-//        if (! usersService.isPasswordValid(password)){
-//            return "Password is invalid!";
-//        }
+    public ResponseEntity<?> addNewUser (String username, String password){
+        if (! userService.isUsernameValid(username)){
+            throw new CustomExceptionController("Invalid username");
+        }else if (! userService.isPasswordValid(password)){
+            throw new CustomExceptionController("Invalid Password");
+        }else if( userService.isUsernameUsed(username)){
+            throw new CustomExceptionController("Username is used");
+        }
 
-         Users users = usersService.initUser(username, password);
-         userRepository.save(users);
+        User user = userService.initUser(username, password);
+        userRepository.save(user);
 
-         Authorities auth = usersService.initAuthority(username);
-         authoritiesRepository.save(auth);
-         return "Saved";
+        Authority auth = userService.initAuthority(username);
+        authorityRepository.save(auth);
+         return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
         }
 
     @GetMapping("/all")
-    public @ResponseBody Iterable<Users> getAllUsers() {
+    public @ResponseBody Iterable<User> getAllUsers() {
         logger.debug(String.valueOf(userRepository.findAll()));
         return userRepository.findAll();
     }

@@ -1,21 +1,27 @@
 package web_demo.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import web_demo.entity.Authorities;
-import web_demo.entity.Users;
-import web_demo.repository.UsersRepository;
+import web_demo.entity.Authority;
+import web_demo.entity.User;
+import web_demo.repository.UserRepository;
+
 
 @Service
-public class UsersService {
+public class UserService {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private UserRepository userRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     //Sign-up Format
-    String passwordFormat = "^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})";
-    String usernameFormat = "(?=.*?[0-9a-zA-Z]).{6,20}";
+    String passwordFormat = "(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\\W]).{8,25}";
+    String usernameFormat = "(?=.*?[a-zA-Z\\W]).{6,20}";
 
     public boolean isPasswordValid (String password){
         return password.matches(passwordFormat);
@@ -25,18 +31,29 @@ public class UsersService {
         return username.matches(usernameFormat);
     }
 
-    //User Constructor
-    public Users initUser (String username, String password){
-        Users users = new Users();
-        String encryptedPassword = "{bcrypt}"+passwordEncoder.encode(password);
-        users.setUsername(username);
-        users.setPassword(encryptedPassword);
-        users.setEnabled(1);
-        return users;
+    //Check if username is used
+    public boolean isUsernameUsed (String username){
+        User user = userRepository.findByUsername(username);
+
+        if (user == null){
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    public Authorities initAuthority (String username){
-        Authorities authorities = new Authorities();
+    //User Constructor
+    public User initUser (String username, String password){
+        User user = new User();
+        String encryptedPassword = "{bcrypt}"+passwordEncoder.encode(password);
+        user.setUsername(username);
+        user.setPassword(encryptedPassword);
+        user.setEnabled(1);
+        return user;
+    }
+
+    public Authority initAuthority (String username){
+        Authority authorities = new Authority();
         authorities.setUsername(username);
         authorities.setAuthority("ROLE_USER");
         return authorities;

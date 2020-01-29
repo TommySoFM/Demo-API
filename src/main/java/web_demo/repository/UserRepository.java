@@ -1,8 +1,8 @@
 package web_demo.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import web_demo.entity.Users;
+import web_demo.entity.User;
 
-public interface UsersRepository extends CrudRepository<Users,Long> {
-    Users findByUsername(String username);
+public interface UserRepository extends CrudRepository<User,Long> {
+    User findByUsername(String username);
 }

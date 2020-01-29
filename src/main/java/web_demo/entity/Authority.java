@@ -1,24 +1,30 @@
 package web_demo.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Entity
-public class Authorities {
+import javax.persistence.*;
 
+@Entity(name="authorities")
+public class Authority {
 
-    @GeneratedValue ( strategy = GenerationType.AUTO)
-
+    @Id
+    @GeneratedValue ( strategy = GenerationType.IDENTITY)
     private Long id;
-    @Id private String username;
+    private String username;
+
+    @JsonIgnore
     private  String authority;
 
+    //Constructor
+    public Authority() {
+    }
+
+    //Getter
     public Long getId() {return id;}
     public String getUsername() {return username;}
     public String getAuthority() {return authority;}
 
+    //Setter
     public void setId(Long id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
     public void setAuthority(String authority) {this.authority = authority;}
