@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PostRepository extends CrudRepository <Post, Long>{
     List<Post> getAllByUsernameEquals(String username);
-
+    List<Post> findAllByOrderByCreationTimestampDesc();
 }

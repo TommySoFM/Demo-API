@@ -27,7 +27,7 @@ public class PostController {
 
     @GetMapping("/post")
     public Iterable<Post> getAllPost () {
-        return postRepository.findAll();
+        return postRepository.findAllByOrderByCreationTimestampDesc();
     }
 //    public ResponseEntity<List<Post>> getAllPost () {
 //        Iterable<Post> posts = postRepository.findAll();
