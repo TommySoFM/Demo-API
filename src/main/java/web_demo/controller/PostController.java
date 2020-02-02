@@ -3,9 +3,14 @@ package web_demo.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import web_demo.entity.Post;
@@ -13,8 +18,6 @@ import web_demo.repository.PostRepository;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping
@@ -26,18 +29,18 @@ public class PostController {
     private PostRepository postRepository;
 
     @GetMapping("/post")
-    public Iterable<Post> getAllPost () {
-        return postRepository.findAllByOrderByCreationTimestampDesc();
+    public Page<Post> getAllPost (@RequestParam int page) {
+        Pageable sort5_TimeDesc = PageRequest.of(page, 3, Sort.by("creationTimestamp").descending());
+
+        return postRepository.findAll(sort5_TimeDesc);
     }
-//    public ResponseEntity<List<Post>> getAllPost () {
-//        Iterable<Post> posts = postRepository.findAll();
-//        List<Post> listPosts = (List<Post>) posts;
-//        return new ResponseEntity<List<Post>>(listPosts, HttpStatus.OK);
 
+    @GetMapping(value = "/post/user")
+    public Page<Post> getPersonPost(@RequestParam int page) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Pageable sort5_TimeDesc = PageRequest.of(page, 3, Sort.by("creationTimestamp").descending());
 
-    @GetMapping(value = "/post/{username}")
-    public Iterable<Post> getPersonPost(@PathVariable String username) {
-        return postRepository.getAllByUsernameEquals(username);
+        return postRepository.getAllByUsernameEquals(username, sort5_TimeDesc);
     }
 
     @PostMapping(value = "/post")
