@@ -14,7 +14,7 @@ import web_demo.service.UserService;
 
 @RestController
 @RequestMapping("/demo")
-public class MainController {
+public class UserController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -26,7 +26,7 @@ public class MainController {
 
     private final UserService userService;
 
-    public MainController(UserService usersService) {
+    public UserController(UserService usersService) {
         this.userService = usersService;
     }
 
