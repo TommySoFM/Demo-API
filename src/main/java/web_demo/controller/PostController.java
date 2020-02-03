@@ -30,9 +30,21 @@ public class PostController {
 
     @GetMapping("/post")
     public Page<Post> getAllPost (@RequestParam int page) {
-        Pageable sort5_TimeDesc = PageRequest.of(page, 3, Sort.by("creationTimestamp").descending());
-
-        return postRepository.findAll(sort5_TimeDesc);
+        if(page < 0){
+            Pageable sortFirstPage = PageRequest.of(0, 3, Sort.by("creationTimestamp").descending());
+            return postRepository.findAll(sortFirstPage);
+        }else{
+            Pageable sort5_TimeDesc = PageRequest.of(page, 3, Sort.by("creationTimestamp").descending());
+            Page<Post> posts = postRepository.findAll(sort5_TimeDesc);
+            int totalPages = posts.getTotalPages();
+            int currentPage = posts.getNumber() + 1;
+            if( currentPage > totalPages){
+                Pageable sortLastPage = PageRequest.of(totalPages-1, 3, Sort.by("creationTimestamp").descending());
+                return postRepository.findAll(sortLastPage);
+            } else{
+                return posts;
+            }
+        }
     }
 
     @GetMapping(value = "/post/user")
@@ -44,7 +56,8 @@ public class PostController {
     }
 
     @PostMapping(value = "/post")
-    public ResponseEntity<?> addNewPost (String username, String postText) {
+    public ResponseEntity<?> addNewPost (String postText) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Post post = new Post(username, postText, LocalDateTime.now());
         postRepository.save(post);
 
