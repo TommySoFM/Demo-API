@@ -18,6 +18,7 @@ import web_demo.repository.PostRepository;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -56,39 +57,59 @@ public class PostController {
     }
 
     @PostMapping(value = "/post")
-    public ResponseEntity<?> addNewPost (String postText) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Post post = new Post(username, postText, LocalDateTime.now());
-        postRepository.save(post);
+    public ResponseEntity<String> addNewPost (String postText) {
+            if(postText.matches("(?=.*?[\\S]).{1,}")){
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            Post post = new Post(username, postText, LocalDateTime.now());
+            postRepository.save(post);
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI locationUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
-        responseHeaders.setLocation(locationUri);
-        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            URI locationUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
+            responseHeaders.setLocation(locationUri);
+            return new ResponseEntity<>("Post Success", responseHeaders, HttpStatus.CREATED);
+        }else{
+                return new ResponseEntity<String>("Post Failed: Empty Text", HttpStatus.NO_CONTENT);
+            }
     }
 
     @PutMapping(value = "/post/{id}")
-    public ResponseEntity<?> updatePost (@PathVariable Long id, String username, String postText){
-        if (!postRepository.existsById(id)){
-            throw new CustomException("Post not exist!");
+    public ResponseEntity<String> updatePost (@PathVariable Long id, String postText){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if(!postText.matches("(?=.*?[\\S]).{1,}")){
+            return new ResponseEntity<String>("Post Update Failed: Empty Text!", HttpStatus.NO_CONTENT);
+        }else if (!postRepository.existsById(id)){
+            return new ResponseEntity<String>("Post Update Failed: Post Not Exist!", HttpStatus.NO_CONTENT);
         }
 
-        postRepository.findById(id).map(
-            post -> {
-                post.setUsername(username);
-                post.setPostText(postText);
-                return postRepository.save(post);
-        });
-        return new ResponseEntity<>(null,HttpStatus.ACCEPTED);
+        Post targetPost = postRepository.findFirstById(id);
+
+        if(!username.equals(targetPost.getUsername())){
+            return new ResponseEntity<String>("Post Update Failed: Bad Credentials!", HttpStatus.FORBIDDEN);
+        }else if (postText.equals(targetPost.getPostText())){
+            return new ResponseEntity<String>("Post Update Failed: Same Content!", HttpStatus.FORBIDDEN);
+        }else {
+            targetPost.setUsername(username);
+            targetPost.setPostText(postText);
+            postRepository.save(targetPost);
+            return new ResponseEntity<String>("Post Update Success!", HttpStatus.ACCEPTED);
+        }
     }
 
     @DeleteMapping(value = "/post/{id}")
-    public ResponseEntity<?> deletePost (@PathVariable Long id){
+    public ResponseEntity<String> deletePost (@PathVariable Long id){
         if (!postRepository.existsById(id)){
-            throw new CustomException("Post not exist!");
+            return new ResponseEntity<String>("Post Delete Failed: Post Not Exist!", HttpStatus.NO_CONTENT);
         }
 
-        postRepository.deleteById(id);
-        return new ResponseEntity<>(null,HttpStatus.ACCEPTED);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String creator = postRepository.findFirstById(id).getUsername();
+
+        if( username.equals(creator)) {
+            postRepository.deleteById(id);
+            return new ResponseEntity<String>("Post Delete Success!", HttpStatus.ACCEPTED);
+        }else {
+            return new ResponseEntity<String>("Post Delete Failed: Bad Credentials!", HttpStatus.FORBIDDEN);
+        }
     }
 }

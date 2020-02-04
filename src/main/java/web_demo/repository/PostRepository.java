@@ -10,4 +10,5 @@ import java.util.List;
 public interface PostRepository extends CrudRepository <Post, Long>{
     Page<Post> getAllByUsernameEquals(String username, Pageable pageable);
     Page<Post> findAll(Pageable pageable);
+    Post findFirstById(Long id);
 }

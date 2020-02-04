@@ -1,10 +1,12 @@
 package web_demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity(name = "post")
 public class Post {
@@ -24,6 +26,14 @@ public class Post {
     @JoinColumn (name="user_id")
     private User user;
 
+    @JsonManagedReference
+    @OneToMany (mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostLike> postLike;
+
+    @JsonManagedReference
+    @OneToMany (mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostComment> postComments;
+
     //Constructor
     public Post() {
     }
@@ -41,6 +51,8 @@ public class Post {
     public User getUser() {return user;}
     public LocalDateTime getCreationTimestamp() {return creationTimestamp;}
 
+    public List<PostLike> getPostLike() {return postLike;}
+    public List<PostComment> getPostComments() {return postComments;}
 
     //Setter
     public void setId(Long id) {this.id = id;}
@@ -49,4 +61,6 @@ public class Post {
     public void setUser(User user) {this.user = user;}
     public void setCreationTimestamp(LocalDateTime creationTime) {this.creationTimestamp = creationTime;}
 
+    public void setPostLike(List<PostLike> postLike) {this.postLike = postLike;}
+    public void setPostComments(List<PostComment> postComments) {this.postComments = postComments;}
 }

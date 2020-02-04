@@ -50,12 +50,18 @@ public class AuthController {
     }
 
     @GetMapping("/isSessionValid")
-    public void isSessionValid(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<Map<String, String>> isSessionValid() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.getName().equals("anonymousUser")){
-            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            String principalUsername = authentication.getName();
+            String sessionId = RequestContextHolder.getRequestAttributes().getSessionId();
+
+            Map<String, String> userData = new HashMap<>();
+            userData.put("username", principalUsername);
+            userData.put("sessionId", sessionId);
+            return new ResponseEntity<Map<String, String>>(userData, HttpStatus.ACCEPTED);
         } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 }
