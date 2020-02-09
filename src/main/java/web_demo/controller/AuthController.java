@@ -39,13 +39,12 @@ public class AuthController {
     }
 
     @RequestMapping("/loginFailed")
-    public Map<String, String> failureController (HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<Map<String, String>> failureController() {
         Map<String, String> message = new HashMap<>();
         message.put("status", "403");
         message.put("message", "Login Failed");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        return message;
+        return new ResponseEntity<Map<String, String>>(message, HttpStatus.FORBIDDEN);
         //or ==> return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 

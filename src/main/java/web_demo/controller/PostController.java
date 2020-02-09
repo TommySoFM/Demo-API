@@ -58,27 +58,22 @@ public class PostController {
 
     @PostMapping(value = "/post")
     public ResponseEntity<String> addNewPost (String postText) {
-            if(postText.matches("(?=.*?[\\S]).{1,}")){
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            Post post = new Post(username, postText, LocalDateTime.now());
-            postRepository.save(post);
 
-            HttpHeaders responseHeaders = new HttpHeaders();
-            URI locationUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
-            responseHeaders.setLocation(locationUri);
-            return new ResponseEntity<>("Post Success", responseHeaders, HttpStatus.CREATED);
-        }else{
-                return new ResponseEntity<String>("Post Failed: Empty Text", HttpStatus.NO_CONTENT);
-            }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Post post = new Post(username, postText, LocalDateTime.now());
+        postRepository.save(post);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI locationUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(post.getId()).toUri();
+        responseHeaders.setLocation(locationUri);
+        return new ResponseEntity<>("Post Success", responseHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/post/{id}")
     public ResponseEntity<String> updatePost (@PathVariable Long id, String postText){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if(!postText.matches("(?=.*?[\\S]).{1,}")){
-            return new ResponseEntity<String>("Post Update Failed: Empty Text!", HttpStatus.NO_CONTENT);
-        }else if (!postRepository.existsById(id)){
+        if (!postRepository.existsById(id)){
             return new ResponseEntity<String>("Post Update Failed: Post Not Exist!", HttpStatus.NO_CONTENT);
         }
 

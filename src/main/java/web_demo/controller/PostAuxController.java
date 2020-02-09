@@ -11,7 +11,6 @@ import web_demo.repository.PostCommentRepository;
 import web_demo.repository.PostLikeRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -22,6 +21,18 @@ public class PostAuxController {
 
     @Autowired
     private PostCommentRepository postCommentRepository;
+
+    @PostMapping("/{id}/isLiked")
+    public ResponseEntity<String> isLike (@PathVariable Long id){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        PostLike result = postLikeRepository.findFirstByUsernameAndPostId(username, id);
+
+        if (result == null){
+            return new ResponseEntity<String>("false", null,HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<String>("true", null,HttpStatus.ACCEPTED);
+        }
+    }
 
     @PostMapping("/{id}/like")
     public ResponseEntity<String> toggleLike (@PathVariable Long id){
@@ -40,14 +51,10 @@ public class PostAuxController {
 
     @PostMapping("/{id}/comment")
     public ResponseEntity<String> newComment (@PathVariable Long id, String commentText){
-        if(commentText.matches("(?=.*?[\\S]).{1,}")) {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
             PostComment postComment = new PostComment(username, commentText, LocalDateTime.now(), id);
             postCommentRepository.save(postComment);
 
-            return new ResponseEntity<String>("Comment Success", HttpStatus.OK);
-        }else{
-            return new ResponseEntity<String>("Comment Failed: Empty Text", HttpStatus.NO_CONTENT);
-        }
+            return new ResponseEntity<String>("Comment Success", HttpStatus.ACCEPTED);
     }
 }

@@ -13,7 +13,7 @@ import web_demo.repository.UserRepository;
 import web_demo.service.UserService;
 
 @RestController
-@RequestMapping("/demo")
+@RequestMapping("/user")
 public class UserController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -31,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addNewUser (String username, String password){
+    public ResponseEntity<String> addNewUser (String username, String password){
         if (! userService.isUsernameValid(username)){
             throw new CustomException("Invalid username");
         }else if (! userService.isPasswordValid(password)){
@@ -45,12 +45,17 @@ public class UserController {
 
         Authority auth = userService.initAuthority(username);
         authorityRepository.save(auth);
-         return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
+         return new ResponseEntity<String>("Sign-up Success!", HttpStatus.ACCEPTED);
         }
 
-    @GetMapping("/all")
-    public @ResponseBody Iterable<User> getAllUsers() {
-        logger.debug(String.valueOf(userRepository.findAll()));
-        return userRepository.findAll();
+    @PostMapping("/isNameUsed")
+    public ResponseEntity<String> isNameUsed (String username){
+        String isNameUsed;
+        if(userService.isUsernameUsed(username)){
+            isNameUsed = "true";
+        }else{
+            isNameUsed = "false";
+        }
+        return new ResponseEntity<String>(isNameUsed, HttpStatus.ACCEPTED);
     }
 }
