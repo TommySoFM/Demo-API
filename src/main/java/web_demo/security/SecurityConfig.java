@@ -1,6 +1,7 @@
 package web_demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,11 +31,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication().dataSource(securityDataSource);
 	}
 
+	@Value("${frontend.endpoint}")
+	private String frontendEndpoint;
+
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource(){
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin("http://localhost:8080");
-		configuration.addAllowedOrigin("http://localhost:8081");
+		configuration.addAllowedOrigin(frontendEndpoint);
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
 		configuration.addExposedHeader("Authorization");
