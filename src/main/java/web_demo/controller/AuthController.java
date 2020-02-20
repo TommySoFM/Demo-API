@@ -1,6 +1,7 @@
 package web_demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,11 +32,14 @@ public class AuthController {
         String principalUserId = String.valueOf(userRepository.findByUsername(principalUsername).getId());
         String sessionId = RequestContextHolder.getRequestAttributes().getSessionId();
 
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE, "JSESSIONID="+sessionId);
+
         Map<String, String> userData = new HashMap<>();
         userData.put("username", principalUsername);
         userData.put("userId", principalUserId);
         userData.put("sessionId", sessionId);
-        return new ResponseEntity<Map<String, String>>(userData, HttpStatus.OK);
+        return new ResponseEntity<Map<String, String>>(userData ,httpHeaders, HttpStatus.OK);
     }
 
     @RequestMapping("/loginFailed")
