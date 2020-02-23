@@ -28,6 +28,11 @@ public class User {
     //Constructor
     public User() {
     }
+    public User(String username, String password, Integer enabled) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+    }
 
     //Getter
     public Long getId() {return id;}

@@ -19,6 +19,11 @@ public class Authority {
     public Authority() {
     }
 
+    public Authority(String username, String authority) {
+        this.username = username;
+        this.authority = authority;
+    }
+
     //Getter
     public Long getId() {return id;}
     public String getUsername() {return username;}

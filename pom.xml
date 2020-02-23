@@ -35,6 +35,26 @@
 		<version>2.2.2.RELEASE</version>
 		</dependency>
 
+		<!-- Spring Test -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>2.2.2.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+			<version>1.4.194</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- JDBC & DB Pool-->
 
@@ -51,8 +71,6 @@
 		</dependency>
 
 	</dependencies>
-
-	<!-- TO DO: Add support for Maven WAR Plugin -->
 
 	<build>
 		<finalName>spring-security-demo</finalName>

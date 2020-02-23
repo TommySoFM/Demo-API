@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import web_demo.entity.Authority;
 import web_demo.entity.User;
+import web_demo.repository.AuthorityRepository;
 import web_demo.repository.UserRepository;
 
 
@@ -16,6 +17,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -33,29 +37,22 @@ public class UserService {
 
     //Check if username is used
     public boolean isUsernameUsed (String username){
-        User user = userRepository.findByUsername(username);
-
-        if (user == null){
-            return false;
-        } else {
-            return true;
-        }
+        return userRepository.existsUserByUsernameEquals(username);
     }
 
-    //User Constructor
-    public User initUser (String username, String password){
+    public void saveUser (String username, String password){
         User user = new User();
         String encryptedPassword = "{bcrypt}"+passwordEncoder.encode(password);
         user.setUsername(username);
         user.setPassword(encryptedPassword);
         user.setEnabled(1);
-        return user;
+        userRepository.save(user);
     }
 
-    public Authority initAuthority (String username){
+    public void saveAuthority (String username){
         Authority authorities = new Authority();
         authorities.setUsername(username);
         authorities.setAuthority("ROLE_USER");
-        return authorities;
+        authorityRepository.save(authorities);
     }
 }
