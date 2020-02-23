@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import web_demo.entity.Authority;
 import web_demo.entity.User;
+import web_demo.repository.AuthorityRepository;
 import web_demo.repository.UserRepository;
 import web_demo.service.UserService;
 
@@ -27,6 +28,9 @@ public class UserServiceTest {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    AuthorityRepository authorityRepository;
 
     // RegEx: (?=.*?[a-zA-Z\\W]).{6,20}
     @Test
@@ -50,8 +54,8 @@ public class UserServiceTest {
 
     @Test
     public void testIsUsernameUsed(){
-        User user = new User("TommySo","Abc123!=",1);
-        when(userRepository.findByUsername("TommySo")).thenReturn(user);
+        when(userRepository.existsUserByUsernameEquals("TommySo")).thenReturn(true);
+        when(userRepository.existsUserByUsernameEquals("Tommy123")).thenReturn(false);
 
         assertTrue(userService.isUsernameUsed("TommySo"));
         assertFalse(userService.isUsernameUsed("Tommy123"));

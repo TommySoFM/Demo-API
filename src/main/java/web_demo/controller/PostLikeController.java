@@ -37,7 +37,6 @@ public class PostLikeController {
         String username = postService.getUsernameFromSession();
 
         if (postLikeService.isPostLiked(id, username)){
-            logger.warn(">>>> Before Unlike <<<<");
             postLikeService.performUnlike(id, username);
             return new ResponseEntity<String>("unliked", HttpStatus.ACCEPTED);
         }
