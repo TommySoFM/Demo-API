@@ -35,6 +35,13 @@
 		<version>2.2.2.RELEASE</version>
 		</dependency>
 
+		<!-- Spring Session -->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-core</artifactId>
+			<version>2.2.1.RELEASE</version>
+		</dependency>
+
 		<!-- Spring Test -->
 
 		<dependency>
@@ -83,7 +90,7 @@
 					<configuration>
 						<executable>true</executable>
 					</configuration>
-				</plugin>						
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
