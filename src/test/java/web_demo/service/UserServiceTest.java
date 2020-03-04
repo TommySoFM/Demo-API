@@ -32,7 +32,7 @@ public class UserServiceTest {
     @MockBean
     AuthorityRepository authorityRepository;
 
-    // RegEx: (?=.*?[a-zA-Z\\W]).{6,20}
+    // RegEx: (?=.*?[a-zA-Z\W])[^\s-]{6,20}
     @Test
     public void testIsUsernameValid(){
         assertTrue(userService.isUsernameValid("TommySo"));
@@ -41,14 +41,14 @@ public class UserServiceTest {
         assertFalse(userService.isUsernameValid("1234567"));    //All Numbers
     }
 
-    // RegEx: (?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\\W]).{8,25}
+    // RegEx: (?=.*?[a-z])(?=.*?[A-Z])[^\s-]{8,25}
     @Test
     public void testIsPasswordValid(){
         assertTrue(userService.isPasswordValid("Abc123!="));
 
         assertFalse(userService.isPasswordValid("Ab12!"));      //Too Short
         assertFalse(userService.isPasswordValid("abc123!="));   //No Capital Letter
-        assertFalse(userService.isPasswordValid("Abc123de"));   //No Special Character
+        assertFalse(userService.isPasswordValid("Abc 123de"));   //With Space
         assertFalse(userService.isPasswordValid("12345678"));   //All Numbers
     }
 
