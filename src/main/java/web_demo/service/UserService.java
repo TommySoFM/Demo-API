@@ -24,8 +24,8 @@ public class UserService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     //Sign-up Format
-    String passwordFormat = "(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[\\W]).{8,25}";
-    String usernameFormat = "(?=.*?[a-zA-Z\\W]).{6,20}";
+    String passwordFormat = "(?=.*?[a-z])(?=.*?[A-Z])[^\\s-]{8,25}";
+    String usernameFormat = "(?=.*?[a-zA-Z\\W])[^\\s-]{6,20}";
 
     public boolean isPasswordValid (String password){
         return password.matches(passwordFormat);
