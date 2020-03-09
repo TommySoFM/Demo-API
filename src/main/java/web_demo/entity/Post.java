@@ -2,6 +2,8 @@ package web_demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import web_demo.serializer.JsonDateSerializer;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -49,6 +51,8 @@ public class Post {
     public String getUsername() {return username;}
     public String getPostText() {return postText;}
     public User getUser() {return user;}
+
+    @JsonSerialize(using= JsonDateSerializer.class)
     public LocalDateTime getCreationTimestamp() {return creationTimestamp;}
 
     public List<PostLike> getPostLike() {return postLike;}
