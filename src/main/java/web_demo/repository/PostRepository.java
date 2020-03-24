@@ -6,9 +6,10 @@ import web_demo.entity.Post;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface PostRepository extends CrudRepository <Post, Long>{
     Page<Post> findAll(Pageable pageable);
+    List<Post> getAllByUsernameEqualsOrderByCreationTimestampDesc(String username);
     Post findFirstById(Long id);
 }
-
-//    Page<Post> getAllByUsernameEquals(String username, Pageable pageable);

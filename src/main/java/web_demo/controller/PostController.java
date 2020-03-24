@@ -8,7 +8,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web_demo.entity.Post;
+import web_demo.entity.PostLike;
+
+import web_demo.entity.PostTable;
+import web_demo.repository.PostRepository;
 import web_demo.service.PostService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class PostController {
@@ -16,11 +24,34 @@ public class PostController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
     private PostService postService;
 
     @GetMapping("/post")
     public Page<Post> getPost (@RequestParam int page) {
         return postService.getPostsByPages(page,3);
+    }
+
+    @GetMapping("/post/self")
+    public List<PostTable> getAllByUser () {
+        String username = postService.getUsernameFromSession();
+        List<Post> posts = postRepository.getAllByUsernameEqualsOrderByCreationTimestampDesc(username);
+
+        List<PostTable> tables = new ArrayList<>();
+        for(Post post: posts){
+            String postText = post.getPostText();
+            String author = post.getUsername();
+            LocalDate creationDate = post.getCreationTimestamp().toLocalDate();
+            int likeCount = post.getPostLike().size();
+            int commentCount = post.getPostComments().size();
+            PostTable table = new PostTable(postText,author,creationDate,likeCount,commentCount);
+
+            tables.add(table);
+        }
+
+        return tables;
     }
 
     @PostMapping(value = "/post")
