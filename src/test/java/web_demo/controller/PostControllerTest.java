@@ -9,11 +9,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import web_demo.entity.Post;
+import web_demo.repository.PostRepository;
 import web_demo.service.PostService;
 
 import java.util.ArrayList;
@@ -39,6 +42,9 @@ public class PostControllerTest {
 
     @MockBean
     private PostService postService;
+
+    @MockBean
+    private PostRepository postRepository;
 
     @Before
     public void setup(){
@@ -91,4 +97,10 @@ public class PostControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
                 .andExpect(status().isAccepted());
     }
+
+    @MockBean
+    private OAuth2AuthorizedClientService oauth2Service;
+
+    @MockBean
+    private ClientRegistrationRepository oauth2Repository;
 }

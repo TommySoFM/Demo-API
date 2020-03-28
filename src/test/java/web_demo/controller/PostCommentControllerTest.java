@@ -8,6 +8,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -48,4 +50,10 @@ public class PostCommentControllerTest {
                  .param("commentText", "Hello World"))
                 .andExpect(status().isAccepted());
     }
+
+    @MockBean
+    private OAuth2AuthorizedClientService oauth2Service;
+
+    @MockBean
+    private ClientRegistrationRepository oauth2Repository;
 }
