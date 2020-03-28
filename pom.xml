@@ -35,6 +35,11 @@
 		<version>2.2.2.RELEASE</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+
 		<!-- Spring Test -->
 
 		<dependency>
@@ -83,7 +88,7 @@
 					<configuration>
 						<executable>true</executable>
 					</configuration>
-				</plugin>						
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
