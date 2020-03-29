@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.oauth2Login()
 				.userInfoEndpoint()
 				.customUserType(CustomOAuth2User.class, "github")
-				.customUserType(CustomOAuth2User.class, "facebook");
+				.customUserType(CustomOAuth2User.class, "google");
 
 //			.and()
 //				.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());

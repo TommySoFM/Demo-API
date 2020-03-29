@@ -18,6 +18,7 @@ public class CustomOAuth2User implements OAuth2User {
     private String name;
     private String login;
     private String email;
+    private String url;
 
     public CustomOAuth2User() {
     }
@@ -30,6 +31,7 @@ public class CustomOAuth2User implements OAuth2User {
             this.attributes.put("name", this.getName());
             this.attributes.put("login", this.getLogin());
             this.attributes.put("email", this.getEmail());
+            this.attributes.put("url", this.getUrl());
         }
         return attributes;
     }
@@ -49,6 +51,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
+        System.out.println(">>> GithubOAuth2User -- getName");
         return this.name;
     }
 
@@ -70,5 +73,13 @@ public class CustomOAuth2User implements OAuth2User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
